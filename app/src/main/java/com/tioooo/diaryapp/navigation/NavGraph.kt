@@ -16,7 +16,12 @@ fun SetupNavGraph(
         startDestination = startDestination,
         navController = navController,
     ) {
-        authenticationRouter()
+        authenticationRouter(
+            navigateToHome = {
+                navController.popBackStack()
+                navController.navigate(Screen.Home.route)
+            }
+        )
         homeRouter()
         writeRouter()
     }

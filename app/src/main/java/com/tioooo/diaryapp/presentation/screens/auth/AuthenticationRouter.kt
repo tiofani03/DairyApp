@@ -8,14 +8,18 @@ import com.stevdzasan.messagebar.rememberMessageBarState
 import com.stevdzasan.onetap.rememberOneTapSignInState
 import com.tioooo.diaryapp.navigation.Screen
 
-fun NavGraphBuilder.authenticationRouter() {
+fun NavGraphBuilder.authenticationRouter(
+    navigateToHome: () -> Unit,
+) {
     composable(route = Screen.Authentication.route) {
         val viewModel: AuthenticationViewModel = viewModel()
         val loadingState by viewModel.loadingState
+        val authenticated by viewModel.authenticated
         val oneTapState = rememberOneTapSignInState()
         val messageBarState = rememberMessageBarState()
 
         AuthenticationScreen(
+            authenticated = authenticated,
             loadingState = loadingState,
             oneTapState = oneTapState,
             messageBarState = messageBarState,
@@ -27,9 +31,7 @@ fun NavGraphBuilder.authenticationRouter() {
                 viewModel.signInWithMongoAtlas(
                     tokenId = tokenId,
                     onSuccess = {
-                        if (it) {
-                            messageBarState.addSuccess("Authentication Successfully")
-                        }
+                        messageBarState.addSuccess("Authentication Successfully")
                     },
                     onError = {
                         messageBarState.addError(it)
@@ -38,7 +40,9 @@ fun NavGraphBuilder.authenticationRouter() {
             },
             onDialogDismissed = {
                 messageBarState.addError(Exception(it))
+                viewModel.setLoading(false)
             },
+            navigateToHome = navigateToHome
         )
     }
 }
