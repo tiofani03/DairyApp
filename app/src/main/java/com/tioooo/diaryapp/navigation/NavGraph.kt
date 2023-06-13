@@ -1,13 +1,11 @@
 package com.tioooo.diaryapp.navigation
 
 import androidx.compose.runtime.Composable
-import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.navArgument
-import com.tioooo.diaryapp.utils.Constants.WRITE_SCREEN_ARGUMENT_KEY
+import com.tioooo.diaryapp.presentation.screens.auth.authenticationRouter
+import com.tioooo.diaryapp.presentation.screens.home.homeRouter
+import com.tioooo.diaryapp.presentation.screens.write.writeRouter
 
 @Composable
 fun SetupNavGraph(
@@ -18,33 +16,8 @@ fun SetupNavGraph(
         startDestination = startDestination,
         navController = navController,
     ) {
-        authenticationRoute()
-        homeRoute()
-        writeRoute()
-    }
-}
-
-fun NavGraphBuilder.authenticationRoute(){
-    composable(route = Screen.Authentication.route) {
-
-    }
-}
-
-fun NavGraphBuilder.homeRoute(){
-    composable(route = Screen.Home.route) {
-
-    }
-}
-
-fun NavGraphBuilder.writeRoute(){
-    composable(
-        route = Screen.Write.route,
-        arguments = listOf(navArgument(name = WRITE_SCREEN_ARGUMENT_KEY){
-            type = NavType.StringType
-            nullable = true
-            defaultValue = null
-        }),
-    ) {
-
+        authenticationRouter()
+        homeRouter()
+        writeRouter()
     }
 }
