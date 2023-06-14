@@ -22,7 +22,11 @@ fun SetupNavGraph(
                 navController.navigate(Screen.Home.route)
             }
         )
-        homeRouter()
+        homeRouter(
+            navigateToWrite = {
+                navController.navigate(Screen.Write.route)
+            }
+        )
         writeRouter()
     }
 }
