@@ -25,6 +25,10 @@ fun SetupNavGraph(
         homeRouter(
             navigateToWrite = {
                 navController.navigate(Screen.Write.route)
+            },
+            navigateToAuth = {
+                navController.popBackStack()
+                navController.navigate(Screen.Authentication.route)
             }
         )
         writeRouter()
