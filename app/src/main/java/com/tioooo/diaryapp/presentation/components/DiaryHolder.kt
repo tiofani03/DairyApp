@@ -1,5 +1,6 @@
 package com.tioooo.diaryapp.presentation.components
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -17,6 +18,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Shapes
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -36,6 +38,7 @@ import com.tioooo.diaryapp.model.Diary
 import com.tioooo.diaryapp.model.Mood
 import com.tioooo.diaryapp.ui.theme.Elevation
 import com.tioooo.diaryapp.utils.toInstant
+import io.realm.kotlin.ext.realmListOf
 import java.text.SimpleDateFormat
 import java.time.Instant
 import java.util.Date
@@ -48,6 +51,7 @@ fun DiaryHolder(
 ) {
     val localDensity = LocalDensity.current
     var componentHeight by remember { mutableStateOf(0.dp) }
+    var galleryOpened by remember { mutableStateOf(false) }
 
     Row(modifier = Modifier
         .clickable(
@@ -80,6 +84,20 @@ fun DiaryHolder(
                     maxLines = 4,
                     overflow = TextOverflow.Ellipsis,
                 )
+                if (diary.images.isNotEmpty()) {
+                    ShowGalleryButton(
+                        modifier = Modifier,
+                        galleryOpened = galleryOpened,
+                        onClick = {
+                            galleryOpened = !galleryOpened
+                        },
+                    )
+                }
+                AnimatedVisibility(visible = galleryOpened) {
+                    Column(modifier = Modifier.padding(14.dp)) {
+                        Gallery(images = diary.images)
+                    }
+                }
             }
 
         }
@@ -124,13 +142,35 @@ fun DiaryHeader(
 }
 
 @Composable
+fun ShowGalleryButton(
+    modifier: Modifier = Modifier,
+    galleryOpened: Boolean,
+    onClick: () -> Unit,
+) {
+    TextButton(
+        modifier = modifier.padding(start = 4.dp),
+        onClick = onClick
+    ) {
+        Text(
+            text = if (galleryOpened) "Hide Gallery" else "Show Gallery",
+            style = TextStyle(fontSize = MaterialTheme.typography.bodySmall.fontSize),
+        )
+    }
+
+}
+
+@Composable
 @Preview(showBackground = true)
 fun DiaryHolderPreview() {
     DiaryHolder(diary = Diary().apply {
         title = "My Diary"
-        description = "Ini contoh deskripsi dari aplikasi diary yang akan dibikin ya ges yaaa Ini contoh deskripsi dari aplikasi diary yang akan dibikin ya ges yaaa Ini contoh deskripsi dari aplikasi diary yang akan dibikin ya ges yaaa Ini contoh deskripsi dari aplikasi diary yang akan dibikin ya ges yaaa"
+        description =
+            "Ini contoh deskripsi dari aplikasi diary yang akan dibikin ya ges yaaa Ini contoh deskripsi dari aplikasi diary yang akan dibikin ya ges yaaa Ini contoh deskripsi dari aplikasi diary yang akan dibikin ya ges yaaa Ini contoh deskripsi dari aplikasi diary yang akan dibikin ya ges yaaa"
         mood = Mood.Neutral.name
-    }){
+        images = realmListOf(
+            "", "",
+        )
+    }) {
 
     }
 }
